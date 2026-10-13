@@ -8,7 +8,7 @@ require_once __DIR__ . '/../src/inventario.php';
 // Función facilitada: escapar la salida HTML.
 function e(string $valor): string
 {
-    return htmlspecialchars($valor, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    return htmlspecialchars($valor ?? "", ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
 function entrada(string $clave, string $defecto = ''): string
@@ -23,38 +23,39 @@ function entrada(string $clave, string $defecto = ''): string
 $equipos = prepararEquipos($equipos, $prestamos);
 
 // TODO E2: sustituir estos valores provisionales por la lectura de los controles GET.
-$texto = entrada("q");
-$categoria = entrada("categoria");
+$texto = entrada("q", "");
+$categoria = entrada("categoria", "");
 $soloDisponibles = entrada("disponibles") === "1";
-$orden = entrada("nombre", "disponibles");
-$id = entrada("id");
-$codigo = entrada("codigo");
+$orden = entrada("orden", "nombre");
+$id = entrada("id", "");
+$codigo = entrada("codigo", "");
 
 $categorias = obtenerCategorias($equipos);
-$aviso = '';
+$aviso = null;
 
 // TODO E3: validar orden y categoria; aplicar los valores por defecto y el aviso indicado.
 if(!in_array($orden, ["nombre", "disponibles"], true)){
     $orden = "nombre";
 }
 
-;
 
 if(!categoriaValida($categoria, $categorias)){
     $aviso = "categoria no valida";
     $categoria = "";
 }
 // TODO E4: llamar al filtrado y ordenación; preparar el resumen y las etiquetas del listado.
-$visibles = [];
+$visibles = filtrarEquipos($equipos, $texto, $categoria, $soloDisponibles);
+$visibles = ordenarEquipos($visibles, $orden);
 $resumen = resumirEquipos($visibles);
-$etiquetas = [];
+$etiquetas = generarEtiquetas($equipos, prefijo: "equipo: ");
 
 $seleccionado = null;
 $avisoFicha = '';
 
 if ($id !== '') {
-    // TODO E5: validar el id con filter_var y FILTER_VALIDATE_INT, mínimo 1.
-    $idEntero = false;
+    $idEntero = filter_var($id, FILTER_VALIDATE_INT, [
+        'options' => ['min_range' => 1]
+    ]);
 
     if ($idEntero === false) {
         $avisoFicha = 'Indica un id entero positivo.';

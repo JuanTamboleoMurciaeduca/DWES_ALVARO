@@ -83,29 +83,26 @@ function filtrarEquipos(
 
 function ordenarEquipos(array $equipos, string $orden): array
 {
-    // TODO 4: ordenar una copia según el criterio y desempatar por id.
     $copia = $equipos;
 
     usort(
         $copia,
-        function(array $a, array $b) use ($orden): int {
-            if($orden === "disponibles"){
-                $resultado = $b["disponibles"] <=> $a["disponibles"]; 
-
-                if($resultado !== 0){
+        function (array $a, array $b) use ($orden): int {
+            if ($orden === "disponibles") {
+                $resultado = $a["disponibles"] <=> $b["disponibles"];
+                if ($resultado !== 0) {
                     return $resultado;
                 }
-            } elseif($orden === "nombre"){
-                $resultado = $a["nombre"] <=> $b["nombre"];
-
-                if($resultado !== 0){
+            } elseif ($orden === "nombre") {
+                $resultado = normalizarBusqueda($a["nombre"]) <=> normalizarBusqueda($b["nombre"]);
+                if ($resultado !== 0) {
                     return $resultado;
                 }
             }
 
             return $a["id"] <=> $b["id"];
-        } 
-        );
+        }
+    );
 
     return $copia;
 }
@@ -176,7 +173,7 @@ function responsableVisible(?string $responsable): string
 {
     // TODO 11: resolver el caso de responsable null
     if($responsable === null){
-        return "responsable pendiente";
+        return "Responsable pendiente";
     }
     return $responsable;
 }

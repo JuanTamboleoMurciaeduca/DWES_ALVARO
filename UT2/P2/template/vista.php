@@ -48,10 +48,10 @@
                 Solo disponibles
             </label>
             <button>Consultar</button>
-            <a href="/">Reiniciar</a>
+            <a href="./public/index.php">Reiniciar</a>
         </form>
 
-        <?php if ($aviso !== ''): ?>
+        <?php if ($aviso !== null): ?>
             <p class="notice" role="status"><?= e($aviso) ?></p>
         <?php endif; ?>
 
