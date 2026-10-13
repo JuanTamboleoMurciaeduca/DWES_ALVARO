@@ -26,7 +26,7 @@ $equipos = prepararEquipos($equipos, $prestamos);
 $texto = entrada("q");
 $categoria = entrada("categoria");
 $soloDisponibles = entrada("disponibles") === "1";
-$orden = entrada("orden", "nombre");
+$orden = entrada("nombre", "disponibles");
 $id = entrada("id");
 $codigo = entrada("codigo");
 
@@ -45,18 +45,16 @@ if(!categoriaValida($categoria, $categorias)){
     $categoria = "";
 }
 // TODO E4: llamar al filtrado y ordenación; preparar el resumen y las etiquetas del listado.
-$equipos = filtrarEquipos($equipos, $texto, $categoria, $soloDisponibles);
-$equipos = ordenarEquipos($equipos, $orden);
-$visibles = $equipos;
+$visibles = [];
 $resumen = resumirEquipos($visibles);
-$etiquetas = generarEtiquetas($visibles,);
+$etiquetas = [];
 
 $seleccionado = null;
 $avisoFicha = '';
 
 if ($id !== '') {
     // TODO E5: validar el id con filter_var y FILTER_VALIDATE_INT, mínimo 1.
-    $idEntero = filter_var($id, FILTER_VALIDATE_INT,["options" => ["min_range" => 1]]);
+    $idEntero = false;
 
     if ($idEntero === false) {
         $avisoFicha = 'Indica un id entero positivo.';
