@@ -60,7 +60,7 @@ $otro = $libros[2];
 $entrada = $_GET['q'] ?? '';
 $entradaBusqueda = is_string($entrada) ? $entrada : '';
 $entradaBusqueda = trim(mb_strtolower($entradaBusqueda), "UTF-8");
-$soloDisponibles = isset($_GET['disponible']);
+$soloDisponibles = isset($_GET['disponibles']);
 $ordenEntrada = $_GET['orden'] ?? 'paginas';
 $orden = is_string($ordenEntrada)
     && in_array($ordenEntrada, ['paginas', 'titulo'], true)

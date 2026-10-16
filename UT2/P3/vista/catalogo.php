@@ -12,7 +12,7 @@ function e(string $texto): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Biblioteca en memoria</title>
-    <link rel="stylesheet" href="assets/estilos.css">
+    <link rel="stylesheet" href="../public/assets/estilos.css">
 </head>
 <body>
 <main class="contenedor">
