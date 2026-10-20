@@ -5,14 +5,16 @@ declare(strict_types=1);
 class Videojuego extends Juego{
     private string $plataforma;
 
-    #[Override]
     public function __construct(int $id, string $nombre, string $plataforma)
     {
-        return parent::__construct($id, $nombre);
+        parent::__construct($id, $nombre);
+
+        $this->plataforma = $plataforma;
 
         if(trim($this->plataforma) === ""){
             throw new InvalidArgumentException("Plataforma vacia");
         }
+
     }
 
     public function plataforma():string{

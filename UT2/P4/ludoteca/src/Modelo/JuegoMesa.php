@@ -3,15 +3,17 @@ declare(strict_types=1);
 
 // TODO M5. Especializa JuegoMesa con su constructor, plazo y ficha.
 class JuegoMesa extends Juego{
-    private int $jugadores;
+    private int $jugadores ;
 
-    #[Override]
-    public function __construct(int $id,string $nombre, int $jugadores){
+    public function __construct(public int $id,public string $nombre, int $jugadores){
         parent::__construct($id,$nombre);
 
-        if($this->jugadores <=0){
+        $this->jugadores = $jugadores;    
+
+        if($this->jugadores <= 0){
             throw new InvalidArgumentException("Los jugadores no pueden ser 0 o menos");
         }
+        
     }
 
     public function jugadores(): int
