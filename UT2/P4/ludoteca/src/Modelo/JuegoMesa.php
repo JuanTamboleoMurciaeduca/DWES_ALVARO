@@ -5,6 +5,7 @@ declare(strict_types=1);
 class JuegoMesa extends Juego{
     private int $jugadores;
 
+    #[Override]
     public function __construct(int $id,string $nombre, int $jugadores){
         parent::__construct($id,$nombre);
 
