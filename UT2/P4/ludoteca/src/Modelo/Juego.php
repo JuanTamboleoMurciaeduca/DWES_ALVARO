@@ -3,8 +3,12 @@ declare(strict_types=1);
 
 // TODO M4. Implementa la base abstracta Juego y las operaciones del préstamo.
 abstract class Juego implements Prestable{
-    public function __construct(public int $id, public string $nombre, 
-                                public bool $prestado, public int $dias)
+    private int $id;
+    private string $nombre; 
+    private bool $prestado = false; 
+    private int $dias = 0;
+
+    public function __construct(int $id, string $nombre)
     { 
         if($id<=0 || trim($nombre) === ""){
             throw new InvalidArgumentException("El ID no puedes ser menor de 1 o el NOMBRE esta vacio");
@@ -23,7 +27,7 @@ abstract class Juego implements Prestable{
     }
 
     public function prestado():bool{
-        return $this->prestado();
+        return $this->prestado;
     }
 
     public function dias():int{
@@ -44,7 +48,7 @@ abstract class Juego implements Prestable{
             throw new InvalidArgumentException("No pueden ser 0 o menos dias");
         }
 
-        if($this->prestado() === false){
+        if($this->prestado === true){
             throw new PrestamoException("Esta ya prestado");  
         }
 
@@ -73,6 +77,6 @@ abstract class Juego implements Prestable{
             throw new PrestamoException("No se puede prestar");
         }
 
-        
+
     }
 }
