@@ -1,5 +1,8 @@
 <?php
-    namespace App\Modelo;
+    namespace App\modelo;
+
+    use App\Modelo\EstadoEnvio;
+    use InvalidArgumentException;
 
     abstract class Envio{
         private readonly int $id;
@@ -48,6 +51,16 @@
         protected abstract function coutaFija():int;
         protected abstract function precioBloque():int;
 
+        public function enviar():void{
+            $this->estado = EstadoEnvio::Enviado;
+        }
 
+        public function entregar():void{
+            $this->estado = EstadoEnvio::Entregado;
+        }
+
+        public function cancelar():void{
+            $this->estado = EstadoEnvio::Cancelado;
+        }
     }
 ?>
