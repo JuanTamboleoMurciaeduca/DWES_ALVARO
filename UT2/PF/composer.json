@@ -1,0 +1,16 @@
+{
+    "name": "alvaro.sanchez/pf",
+    "autoload": {
+        "psr-4": {
+            "Clase\\Alquileres\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Alvaro",
+            "email": "alvarosanchezsegura40@gmail.com"
+        }
+    ],
+    
+    "require": {}
+}
