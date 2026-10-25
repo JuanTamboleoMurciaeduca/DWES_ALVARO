@@ -1,0 +1,9 @@
+{
+    "name": "ut2/ejercicio51",
+    "description": "Ejercicio 51 - Preparar la carga con Composer",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}

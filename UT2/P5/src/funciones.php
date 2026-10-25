@@ -3,14 +3,26 @@ declare(strict_types=1);
 
 function entrada(array $origen, string $clave, string $defecto = ''): string
 {
-    // TODO F1. Lee solo cadenas y aplica el valor por defecto.
-    throw new LogicException("Pendiente: entrada.");
+    // F1. Lee solo cadenas y aplica el valor por defecto.
+    if (!isset($origen[$clave]) || !is_string($origen[$clave])) {
+        return $defecto;
+    }
+
+    return $origen[$clave];
 }
 
 function enteroPositivo(string $valor): int
 {
-    // TODO F2. Valida antes de convertir; rechaza con InvalidArgumentException.
-    throw new LogicException("Pendiente: enteroPositivo.");
+    // F2. Valida con filter_var sin convertir previamente.
+    $validador = filter_var($valor, FILTER_VALIDATE_INT, [
+        'options' => ['min_range' => 1]
+    ]);
+
+    if ($validador === false) {
+        throw new InvalidArgumentException("Indica un entero positivo.");
+    }
+
+    return $validador;
 }
 
 function limpiarEspacios(string $texto): string
@@ -25,22 +37,72 @@ function normalizar(string $texto): string
 
 function buscarPorId(array $actividades, int $id): ?Actividad
 {
-    // TODO F3. Usa array_find con un callback tipado.
-    throw new LogicException("Pendiente: buscarPorId.");
+    // F3. Usa array_find con un callback tipado.
+    return array_find(
+        $actividades,
+        fn(Actividad $actividad): bool => $actividad->id() === $id
+    );
 }
 
 function filtrarActividades(
     array $actividades, string $texto, string $tipo,
     ?EstadoActividad $estado, bool $soloDisponibles
 ): array {
-    // TODO F4. Combina las cuatro condiciones mediante array_filter.
-    throw new LogicException("Pendiente: filtrarActividades.");
+    // F4. Combina las cuatro condiciones mediante array_filter y reindexa con array_values.
+    $textoNormalizado = normalizar($texto);
+
+    $filtradas = array_filter(
+        $actividades,
+        function (Actividad $actividad) use ($textoNormalizado, $tipo, $estado, $soloDisponibles): bool {
+            // 1. Filtrado por texto
+            if ($textoNormalizado !== '' && !str_contains(normalizar($actividad->nombre()), $textoNormalizado)) {
+                return false;
+            }
+
+            // 2. Filtrado por tipo
+            if ($tipo !== '' && $actividad->tipo() !== $tipo) {
+                return false;
+            }
+
+            // 3. Filtrado por estado
+            if ($estado !== null && $actividad->estado() !== $estado) {
+                return false;
+            }
+
+            // 4. Filtrado por disponibilidad (debe estar Abierta Y tener plazas libres)
+            if ($soloDisponibles) {
+                if ($actividad->estado() !== EstadoActividad::Abierta || $actividad->plazasLibres() <= 0) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    );
+
+    return array_values($filtradas);
 }
 
 function ordenarActividades(array $actividades, string $orden): array
 {
-    // TODO F5. Ordena una copia con usort y desempata por id.
-    throw new LogicException("Pendiente: ordenarActividades.");
+    // F5. Ordena una copia con usort y desempata por id ascendente.
+    $copia = $actividades;
+
+    usort($copia, function (Actividad $a, Actividad $b) use ($orden): int {
+        $resultado = match ($orden) {
+            'libres' => $a->plazasLibres() <=> $b->plazasLibres(),
+            'nombre' => normalizar($a->nombre()) <=> normalizar($b->nombre()),
+            default  => normalizar($a->nombre()) <=> normalizar($b->nombre()),
+        };
+
+        if ($resultado === 0) {
+            return $a->id() <=> $b->id();
+        }
+
+        return $resultado;
+    });
+
+    return $copia;
 }
 
 function transformarActividades(array $actividades, callable $transformacion): array
@@ -50,16 +112,38 @@ function transformarActividades(array $actividades, callable $transformacion): a
 
 function generarEtiquetas(
     array $actividades, string $prefijo = 'Actividad: '
-): array
-{
-    // TODO F6. Usa transformarActividades y una closure con use.
-    throw new LogicException("Pendiente: generarEtiquetas.");
+): array {
+    // F6. Usa transformarActividades y closure capturando prefijo con use.
+    return transformarActividades(
+        $actividades,
+        fn(Actividad $actividad): string => $actividad->etiqueta($prefijo)
+    );
 }
 
 function resumirActividades(array $actividades): array
 {
-    // TODO F7. Calcula las cinco magnitudes con array_reduce.
-    throw new LogicException("Pendiente: resumirActividades.");
+    // F7. Calcula las cinco magnitudes requeridas con array_reduce.
+    $inicial = [
+        'cantidad'  => 0,
+        'capacidad' => 0,
+        'ocupadas'  => 0,
+        'libres'    => 0,
+        'importe'   => 0,
+    ];
+
+    return array_reduce(
+        $actividades,
+        function (array $acc, Actividad $actividad): array {
+            $acc['cantidad']++;
+            $acc['capacidad'] += $actividad->capacidad();
+            $acc['ocupadas']  += $actividad->ocupadas();
+            $acc['libres']    += $actividad->plazasLibres();
+            $acc['importe']   += $actividad->importe($actividad->ocupadas());
+
+            return $acc;
+        },
+        $inicial
+    );
 }
 
 function e(string $texto): string
