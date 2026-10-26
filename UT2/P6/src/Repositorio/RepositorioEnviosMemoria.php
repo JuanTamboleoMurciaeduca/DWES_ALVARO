@@ -1,5 +1,5 @@
 <?php
-    namespace App\Repositirio;
+    namespace App\Repositorio;
 
     use App\contrato\RepositorioEnvios;
     use App\modelo\Envio;
@@ -7,13 +7,10 @@ use EnvioException;
 use InvalidArgumentException;
 use Override;
 
-    class RespositorioEnviosMemoria implements RepositorioEnvios{
-        private array $envios;
+    class RepositorioEnviosMemoria implements RepositorioEnvios{
+        private array $envios = [];
 
-        public function __construct(array $envios)
-        {
-            $this->envios = [];
-        }
+        public function __construct(){}
 
         #[Override]
         public function registrar(Envio $envio): void{
