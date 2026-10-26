@@ -1,0 +1,9 @@
+{
+    "name": "ut2/ejercicio53",
+    "description": "Ejercicio 53 - Autoload de una jerarquía completa",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}

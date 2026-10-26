@@ -9,19 +9,24 @@ abstract class Actividad implements Reservable{
                                 private readonly int $capacidad, private int $ocupadas,
                                 private readonly EstadoActividad $estado, private readonly ?Responsable $responsable)
     {
-        if($this->id <= 0 || trim($this->nombre) === "" || $this->capacidad <=0){
-            throw new InvalidArgumentException("El id tiene que ser mayor que 0, el nombre esta vacio o la capacidad es menor a 0");
+        if($id <= 0){
+            throw new InvalidArgumentException("El id tiene que ser mayor que 0");
         }
 
-        if($this->ocupadas <= 0 && $this->ocupadas >= $this->capacidad){
+        if( trim($nombre) === ""){
+            throw new InvalidArgumentException("EL nombre no peude estar vaico");
+        }
+
+        if($capacidad <= 0){
+            throw new InvalidArgumentException("la capacidad es menor a 0");
+        }
+
+        if($ocupadas <= 0 && $ocupadas >= $capacidad){
             throw new InvalidArgumentException("No puede haber mas o menos ocupado que de capaicidad");
         }
 
-        if($this->estado !== "abierta" || $this->estado !== "cerrado"){
+        if($estado !== EstadoActividad::Abierta && $estado !== EstadoActividad::Cerrada){
             throw new InvalidArgumentException("Esta caso no esta contemplado");
-        }
-        if($this->responsable !== null){
-            throw new InvalidArgumentException("No es objeto o nulo");
         }
     }
 
@@ -45,7 +50,7 @@ abstract class Actividad implements Reservable{
         return $this->estado;
     }
 
-    public function responsable():Responsable{
+    public function responsable():?Responsable{
         return $this->responsable;
     }
 
