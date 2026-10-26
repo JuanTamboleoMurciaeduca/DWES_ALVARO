@@ -46,7 +46,7 @@
     }
 
     // Procesar cadenas: prestado, perdido y reservado para E-01
-    echo "<br>--- Procesando cambios de estado en E-01 ---<br>";
+    echo "<br>"."--- Procesando cambios de estado en E-01 ---"."<br>";
     $entradas = ['prestado', 'perdido', 'reservado'];
     foreach ($entradas as $entrada) {
         $nuevoEstado = EstadoEjemplar::tryFrom($entrada);
@@ -59,7 +59,7 @@
     }
 
     // Recorrer casos de enum y calcular recuento
-    echo "<br>--- Valores admitidos y conteo ---<br>";
+    echo "<br>"."--- Valores admitidos y conteo ---"."<br>";
     foreach (EstadoEjemplar::cases() as $case) {
         $conteo = count(array_filter($ejemplares, fn(Ejemplar $e): bool => $e->estado() === $case));
         echo "Estado {$case->value}: $conteo ejemplares<br>";

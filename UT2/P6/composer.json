@@ -11,5 +11,8 @@
             "email": "alvarosanchezsegura40@gmail.com"
         }
     ],
+    "scripts": {
+        "envios": "php envios.php"
+    },
     "require": {}
 }

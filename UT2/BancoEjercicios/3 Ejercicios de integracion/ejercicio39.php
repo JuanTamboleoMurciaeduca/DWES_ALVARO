@@ -42,7 +42,7 @@
         echo $etiqueta . "<br>";
     }
 
-    // En las arrow functions de PHP (fn), las variables del ambito externo como $busqueda
+    // En las arrow functions de PHP, las variables del ambito externo como $busqueda
     // se capturan automaticamente por valor (sin necesidad de escribir use ($busqueda)).
 
     // Repetir con busqueda que no encuentre nada
