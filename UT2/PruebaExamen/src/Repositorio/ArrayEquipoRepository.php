@@ -6,6 +6,7 @@ namespace Alquiler\Equipo\Repositorio;
 
 use Alquiler\Equipo\Contrato\EquipoRepository;
 use Alquiler\Equipo\Modelo\Equipo;
+use Override;
 
 final class ArrayEquipoRepository implements EquipoRepository
 {

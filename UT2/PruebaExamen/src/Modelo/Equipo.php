@@ -6,6 +6,7 @@ namespace Alquiler\Equipo\Modelo;
 
 use Alquiler\Equipo\Compartido\GeneraFicha;
 use Alquiler\Equipo\Excepcion\EquipoException;
+use InvalidArgumentException;
 
 abstract class Equipo
 {
@@ -71,12 +72,32 @@ abstract class Equipo
     public function reservar(int $cantidad): void
     {
         // TODO M3: valida la reserva antes de modificar las unidades reservadas.
-        throw new \LogicException('Pendiente M3');
+        if($cantidad <=0){
+            throw new InvalidArgumentException("La cnaitdad no puede ser mayor o igual a cero");
+        }
+
+        if($this->estado()::EnRevision){
+            throw new EquipoException("El euqipo no puede estar en revisio");
+        }
+
+        if($this->disponibles() > $cantidad){
+            throw new EquipoException("No puedes reservar mas de lo que hay");
+        }
+
+        $this->reservadas = $this->reservadas+$cantidad;
     }
 
     public function devolver(int $cantidad): void
     {
         // TODO M4: valida la devolución antes de modificar las unidades reservadas.
-        throw new \LogicException('Pendiente M4');
+        if($cantidad <= 0){
+            throw new InvalidArgumentException("La cnatidad no puede ser 0 o menos");
+        }
+
+        if($cantidad > $this->reservadas){
+            throw new EquipoException("No se puede devolver mas de lo que hay");
+        }
+
+        $this->reservadas -= $cantidad;
     }
 }

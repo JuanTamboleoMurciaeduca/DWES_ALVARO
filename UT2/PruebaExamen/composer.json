@@ -5,5 +5,8 @@
     "psr-4": {
       "Alquiler\\Equipo\\": "src/"
     }
+  },
+  "scripts": {
+    "practica": "bin/practica.php"
   }
 }

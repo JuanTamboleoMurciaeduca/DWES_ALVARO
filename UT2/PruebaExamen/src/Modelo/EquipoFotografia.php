@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Alquiler\Equipo\Modelo;
 
+use Uri\InvalidUriException;
+
 final class EquipoFotografia extends Equipo
 {
     public function __construct(
@@ -16,7 +18,10 @@ final class EquipoFotografia extends Equipo
         private readonly int $seguroCentimos,
     ) {
         // TODO M0: valida el seguro e inicializa la parte heredada.
-        throw new \LogicException('Pendiente M0');
+        if($seguroCentimos < 0){
+            throw new InvalidUriException("El seguro no puede ser mnor de 0");
+        }
+        parent::__construct($id, $nombre,$unidades, $reservadas, $estado,$tarifaBaseCentimos);
     }
 
     public function tipo(): string
@@ -27,6 +32,6 @@ final class EquipoFotografia extends Equipo
     public function tarifaDia(): int
     {
         // TODO M1: calcula la tarifa diaria de fotografía.
-        throw new \LogicException('Pendiente M1');
+        return $this->tarifaBaseCentimos + $this->seguroCentimos;
     }
 }

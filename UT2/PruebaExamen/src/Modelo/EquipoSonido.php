@@ -14,6 +14,6 @@ final class EquipoSonido extends Equipo
     public function tarifaDia(): int
     {
         // TODO M2: calcula la tarifa diaria de sonido.
-        throw new \LogicException('Pendiente M2');
+        return $this->tarifaBaseCentimos;
     }
 }

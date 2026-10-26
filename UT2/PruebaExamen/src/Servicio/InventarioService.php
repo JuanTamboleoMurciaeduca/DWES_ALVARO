@@ -7,6 +7,7 @@ namespace Alquiler\Equipo\Servicio;
 use Alquiler\Equipo\Contrato\EquipoRepository;
 use Alquiler\Equipo\Excepcion\EquipoException;
 use Alquiler\Equipo\Modelo\{Equipo, EstadoEquipo};
+use App\Modelo\EstadoEnvio;
 
 final class InventarioService
 {
@@ -26,25 +27,70 @@ final class InventarioService
         }
 
         // TODO F1: filtra con array_filter y devuelve claves consecutivas.
-        throw new \LogicException('Pendiente F1');
+        $equipos = $this->repository->todos();
+        $aux = array_filter(
+            $equipos,
+            function(Equipo $e) use ($texto, $estado, $minDisponibles):bool{
+                if(!str_contains(normalizar($texto), normalizar($e->nombre()))){
+                    return false;
+                }
+                if($estado !== null && $estado === EstadoEquipo::Disponible || $estado === EstadoEquipo::EnRevision){
+                    return false;
+                }
+
+                if($minDisponibles > 0){
+                    if($estado !== EstadoEquipo::Disponible){
+                        return false;
+                    }
+                }
+
+                return true;
+            },
+        );
+
+        return array_values($aux);
     }
 
     public function ordenar(array $equipos): array
     {
         // TODO F2: ordena una copia mediante usort y un callback.
-        throw new \LogicException('Pendiente F2');
+        $copia = $equipos;
+        usort($copia, 
+            fn(Equipo $e, Equipo $b):int => 
+                ($e->disponibles() <=> $b->disponibles()) ?:
+                ($b->tarifaDia() <=> $e->tarifaDia()) ?:
+                ($e->id() <=> $b->id())
+                
+            );
+
+        return $copia;
     }
 
     public function fichas(array $equipos, string $prefijo = 'Equipo: '): array
     {
         // TODO F3: utiliza array_map y una arrow function.
-        throw new \LogicException('Pendiente F3');
+        $aux = array_map(fn(Equipo $e):string =>
+            $e->ficha($prefijo)
+        , $equipos);
+
+        return $aux;
     }
 
     public function resumen(array $equipos): array
     {
         // TODO F4: acumula las tres cifras mediante array_reduce.
-        throw new \LogicException('Pendiente F4');
+        $aux = array_reduce(
+            $equipos,
+            fn(array $carry, Equipo $e):array =>[
+                "unidades" => $carry["unidades"] + $e->unidades(),
+                "reservada"=> $carry["reservadas"] + $e->reservadas(),
+                "valorDisponibleCentimos" => $carry["valorDisponibleCentimos"] + $e->disponibles() * $e->tarifaDia()
+            ]
+            , 
+            []
+        );
+
+        return $aux;
     }
 
     public function presupuestarLotes(
