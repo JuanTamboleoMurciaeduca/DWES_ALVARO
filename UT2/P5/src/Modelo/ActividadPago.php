@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 // TODO M7. Implementa la especialización final de pago y su constructor.
 final class ActividadPago extends Actividad{
-    #[Override]
     public function __construct(int $id, string $nombre, int $capacidad, int $ocupadas, EstadoActividad $estado, ?Responsable $responsable, private readonly int $precioCentimos){
         parent::__construct($id, $nombre, $capacidad, $ocupadas, $estado, $responsable);
 
