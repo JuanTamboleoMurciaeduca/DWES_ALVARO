@@ -76,15 +76,15 @@ abstract class Equipo
             throw new InvalidArgumentException("La cnaitdad no puede ser mayor o igual a cero");
         }
 
-        if($this->estado()::EnRevision){
+        if($this->estado() === EstadoEquipo::EnRevision){
             throw new EquipoException("El euqipo no puede estar en revisio");
         }
 
-        if($this->disponibles() > $cantidad){
+        if($cantidad > $this->disponibles()){
             throw new EquipoException("No puedes reservar mas de lo que hay");
         }
 
-        $this->reservadas = $this->reservadas+$cantidad;
+        $this->reservadas += $cantidad;
     }
 
     public function devolver(int $cantidad): void
