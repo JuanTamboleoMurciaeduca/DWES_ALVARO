@@ -1,0 +1,9 @@
+{
+  "name": "clases/alquiler-equipos",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "Alquiler\\Equipo\\": "src/"
+    }
+  }
+}
