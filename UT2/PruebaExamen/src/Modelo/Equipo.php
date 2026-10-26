@@ -80,11 +80,11 @@ abstract class Equipo
             throw new EquipoException("El euqipo no puede estar en revisio");
         }
 
-        if($this->disponibles() > $cantidad){
+        if($this->disponibles() < $cantidad){
             throw new EquipoException("No puedes reservar mas de lo que hay");
         }
 
-        $this->reservadas = $this->reservadas+$cantidad;
+        $this->reservadas += $cantidad;
     }
 
     public function devolver(int $cantidad): void

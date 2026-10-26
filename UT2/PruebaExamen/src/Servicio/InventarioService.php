@@ -8,6 +8,7 @@ use Alquiler\Equipo\Contrato\EquipoRepository;
 use Alquiler\Equipo\Excepcion\EquipoException;
 use Alquiler\Equipo\Modelo\{Equipo, EstadoEquipo};
 use App\Modelo\EstadoEnvio;
+use InvalidArgumentException;
 
 final class InventarioService
 {
@@ -31,14 +32,14 @@ final class InventarioService
         $aux = array_filter(
             $equipos,
             function(Equipo $e) use ($texto, $estado, $minDisponibles):bool{
-                if(!str_contains(normalizar($texto), normalizar($e->nombre()))){
+                if(!str_contains($e->nombreNormalizado(), $texto))   {
                     return false;
                 }
-                if($estado !== null && $estado === EstadoEquipo::Disponible || $estado === EstadoEquipo::EnRevision){
+                if($estado !== null && $estado === $e->estado()){
                     return false;
                 }
 
-                if($minDisponibles > 0){
+                if($minDisponibles < 0){
                     if($estado !== EstadoEquipo::Disponible){
                         return false;
                     }
@@ -83,11 +84,11 @@ final class InventarioService
             $equipos,
             fn(array $carry, Equipo $e):array =>[
                 "unidades" => $carry["unidades"] + $e->unidades(),
-                "reservada"=> $carry["reservadas"] + $e->reservadas(),
+                "reservadas"=> $carry["reservadas"] + $e->reservadas(),
                 "valorDisponibleCentimos" => $carry["valorDisponibleCentimos"] + $e->disponibles() * $e->tarifaDia()
             ]
             , 
-            []
+            ["unidades" => 0, "reservadas" => 0, "valorDisponibleCentimos"=>0]
         );
 
         return $aux;
@@ -100,21 +101,21 @@ final class InventarioService
     ): array {
         // TODO D1: repara las etapas conservando las funciones de arrays.
         if ($cantidad <= 0 || $dias <= 0 || $presupuestoCentimos < 0) {
-            throw new \InvalidArgumentException('Cantidad, días o presupuesto no válidos');
+            throw new InvalidArgumentException('Cantidad, días o presupuesto no válidos');
         }
 
         $candidatos = array_filter(
             $this->repository->todos(),
             fn (Equipo $equipo): bool =>
                 $equipo->estado() === EstadoEquipo::Disponible
-                && $equipo->disponibles() > $cantidad
+                && $equipo->disponibles() >= $cantidad
         );
 
         $propuestas = array_map(
             fn (Equipo $equipo): array => [
                 'id' => $equipo->id(),
-                'importeCentimos' => $equipo->tarifaDia() * $dias,
-                'disponiblesDespues' => $equipo->unidades() - $cantidad
+                'importeCentimos' => $cantidad * $equipo->tarifaDia() * $dias,
+                'disponiblesDespues' => $equipo->disponibles() - $cantidad
             ],
             $candidatos
         );
@@ -122,8 +123,8 @@ final class InventarioService
         $opciones = array_reduce(
             $propuestas,
             function (array $resultado, array $propuesta) use ($presupuestoCentimos): array {
-                if ($propuesta['importeCentimos'] >= $presupuestoCentimos) {
-                    $resultado = [$propuesta];
+                if ($propuesta['importeCentimos'] <= $presupuestoCentimos) {
+                    $resultado[] = $propuesta;
                 }
 
                 return $resultado;
@@ -135,8 +136,8 @@ final class InventarioService
             $opciones,
             fn (array $a, array $b): int =>
                 (($b['importeCentimos'] <=> $a['importeCentimos']) !== 0)
-                    ? ($b['importeCentimos'] <=> $a['importeCentimos'])
-                    : ($b['id'] <=> $a['id'])
+                    ? ($a['importeCentimos'] <=> $b['importeCentimos'])
+                    : ($a['id'] <=> $b['id'])
         );
 
         return $opciones;
