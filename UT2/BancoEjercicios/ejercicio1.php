@@ -4,7 +4,7 @@
     }
 
     function cuadrado(int $n):int{
-        return 2**$n;
+        return $n**2;
     }
 
     function aplicar(int $n, callable $callback):int{
