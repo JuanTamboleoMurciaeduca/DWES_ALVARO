@@ -1,62 +1,53 @@
 <?php
+    require_once __DIR__ . "/../src/datos.php";
+    require_once __DIR__ . "/../src/funciones.php";
 
-declare(strict_types=1);
+    $id = $_GET["id"] ?? 0;
+    //$id = (int)$id;
 
-require_once __DIR__ . "/../src/datos.php";
-require_once __DIR__ . "/../src/funciones.php";
+    $resultado = $videojuegos;
+    if ($id !== 0) {
+        // Completa el tratamiento del caso en el que el videojuego no existe.
+        $resultado = buscarPorId($resultado, $id);
+    }
 
-$id = (int) ($_GET["id"] ?? 0);
-//$id = (int)$id;
+    if(empty($resultado)){
+        ?>
+        <!doctype html>
+        <html lang="es">
+        <head>
+            <meta charset="utf-8">
+            <title>Videojuego no encontrado</title>
+        </head>
+        <body>
+            <h1>Video juego no encontrado</h1>
+        </body>
+        </html>
+        <?php
+        exit;
+    }
 
-$resultado = $videojuegos;
-// Cuidado id 0
-if ($id !== 0) {
-    // Completa el tratamiento del caso en el que el videojuego no existe.
-    $resultado = buscarPorId($resultado, $id);
-}
+    // Prepara las fechas y los valores que necesita la ficha.
+    $fechaLanzamiento = new DateTime();// De dónde saco la fecha??
 
-if (empty($resultado)) {
-?>
-    <!doctype html>
-    <html lang="es">
+    $resultado["fechaLanzamiento"] = new DateTime($resultado["fechaLanzamiento"]);
+    $fechaLanzamiento = $resultado["fechaLanzamiento"];
 
-    <head>
-        <meta charset="utf-8">
-        <title>Videojuego no encontrado</title>
-    </head>
+    
 
-    <body>
-        <h1>Video juego no encontrado</h1>
-    </body>
+    $hoy = new DateTimeImmutable();
+    $diasTranscurridos = $hoy->diff($fechaLanzamiento); //0? Habrá que calcular algo, no?
+    $finNovedad = null;
+    $estado =  $diasTranscurridos > 30 ? "Novedad" : "No es novedad";
 
-    </html>
-<?php
-    exit;
-}
-
-// Prepara las fechas y los valores que necesita la ficha.
-$fechaLanzamiento = new DateTime(); // De dónde saco la fecha??
-
-$resultado["fechaLanzamiento"] = new DateTime($resultado["fechaLanzamiento"]);
-$fechaLanzamiento = $resultado["fechaLanzamiento"];
-
-
-
-$hoy = new DateTimeImmutable();
-$diasTranscurridos = $hoy->diff($fechaLanzamiento); //0? Habrá que calcular algo, no?
-$finNovedad = null;
-$estado = '';
-
-// COMPLETAR los cálculos anteriores utilizando los datos del videojuego.
+    // COMPLETAR los cálculos anteriores utilizando los datos del videojuego.
 ?>
 <!doctype html>
 <html lang="es">
-
 <head>
     <meta charset="utf-8">
     <title>Ficha del videojuego</title>
 </head>
-
 <body>
     <h1><?= htmlspecialchars($resultado['titulo'] ?? '') ?></h1>
 
@@ -81,7 +72,7 @@ $estado = '';
         <dd><?= $resultado['puntuacion'] ?? '' ?></dd>
 
         <dt>Fecha de lanzamiento</dt>
-        <dd><?= $fechaLanzamiento->format("Y-m-d") ?></dd>
+        <dd><?=  $fechaLanzamiento->format("Y-m-d")?></dd>
 
         <dt>Días desde el lanzamiento</dt>
         <dd><?= $diasTranscurridos->days ?> </dd>
@@ -90,10 +81,9 @@ $estado = '';
         <dd><?= $fechaLanzamiento->modify("+30days")->format("Y-m-d"); ?></dd>
 
         <dt>Estado</dt>
-        <dd><?= $diasTranscurridos > 30 ? "Novedad" : "No es novedad" ?></dd>
+        <dd><?= $estado?></dd>
     </dl>
 
-    <p><a href="index.php">Volver al catálogo</a></p>
+    <p><a href="../index.php">Volver al catálogo</a></p>
 </body>
-
 </html>
