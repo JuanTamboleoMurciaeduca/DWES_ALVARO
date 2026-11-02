@@ -7,15 +7,10 @@ declare(strict_types=1);
 require_once __DIR__ . "/../src/datos.php";
 require_once __DIR__ . "/../src/funciones.php";
 
-<<<<<<<< HEAD:UT1/ExamenUT1/public/index.php
 // Poner la zona horaria
 
 date_default_timezone_set('Europe/Madrid');
 
-========
-    // Poner la zona horaria
-    date_default_timezone_set("Europe/Madrid");
->>>>>>>> main:ExamenUT1/public/index.php
 
 // 3.1. Leer parámetros
 $genero = $_GET["genero"] ?? "todos";
@@ -43,15 +38,9 @@ if ($plataforma !== "todas") {
     $resultados = filtrarPorPlataforma($resultados, $plataforma);
 }
 
-<<<<<<<< HEAD:UT1/ExamenUT1/public/index.php
 if ($busqueda !== "") {
     $resultados = buscarPorTexto($resultados, $busqueda);
 }
-========
-    if($orden !== "titulo"){
-        $resultados = ordenarVideojuegos($resultados, $orden);
-    }
->>>>>>>> main:ExamenUT1/public/index.php
 
 // El filtro?¿ Siempre entra, no?
 if ($orden === "titulo" || $orden !== "titulo") {
@@ -78,11 +67,6 @@ asort($ventasOrdenadas);
 $timestampConsulta = time();
 $fechaConsulta = date('d/m/Y H:i', $timestampConsulta);
 
-<<<<<<<< HEAD:UT1/ExamenUT1/public/index.php
-========
-    $timestampConsulta = time();
-    $fechaConsulta = new DateTimeImmutable(); // COMPLETAR
->>>>>>>> main:ExamenUT1/public/index.php
 ?>
 <!doctype html>
 <html lang="es">
@@ -160,7 +144,7 @@ $fechaConsulta = date('d/m/Y H:i', $timestampConsulta);
         <?php endforeach; ?>
     </ul>
 
-    <p>Consulta generada: <?= htmlspecialchars($fechaConsulta->format("Y-m-d")) ?></p>
+    <p>Consulta generada: <?= htmlspecialchars($fechaConsulta) ?></p>
 </body>
 
 </html>
