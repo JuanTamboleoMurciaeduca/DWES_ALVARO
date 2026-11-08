@@ -32,8 +32,26 @@ final class AltaControlador
                 if ($errores === []) {
                     $datos = $resultado['datos'];
                     try {
+
                         // COMPLETAR 5. Construir $nuevo con los cinco datos validados.
+                        $nuevo = new Material($datos["nombre"], $datos["fabricante"], $datos["unidades"], $datos["categoria"], $datos["fechaAlta"]);
+                        $inventario->agregar($nuevo);
                         // COMPLETAR 7. Guardar y asociar la imagen si hay archivo.
+                        if($subida["archivo"] !== null){
+                            $archivo = $subida["archivo"];
+                            $destino = prepararDestino($archivo["extension"]);
+
+                            if(!move_uploaded_file($archivo["tmp_name"], $destino["ruta"])){
+                                $errores["imagen"] = "No se pudo subir el archivo";
+                            }else {
+                                $nuevo->cambiarImagen($destino['nombre']);
+                            }
+                        }
+
+                        if($errores === []){
+                            $inventario->agregar($nuevo);
+                            $creado = $nuevo;
+                        }
                         // Al terminar sin errores, agregar $nuevo y asignarlo a $creado.
                 
                     } catch (InvalidArgumentException) {
