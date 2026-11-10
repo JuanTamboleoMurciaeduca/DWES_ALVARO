@@ -53,11 +53,11 @@ function recibirImagen(array $archivos): array
     return ['archivo' => $a, 'error' => null];
 }
 
-function inspeccionarImagen(array $archivos): array
-{
+function inspeccionarImagen(array $archivos): array{
     $r = recibirImagen($archivos);
     if ($r['error'] !== null || $r['archivo'] === null) { return $r; }
     $a = $r['archivo'];
+    
     // COMPLETAR 6. Tamaño, temporal legible y MIME. No mover aquí el archivo.
     if($a["size"] < 1 || $a["size"] > 2 * 1024 * 1024){
         return ["archivo" => null, "error"=>"Archivo de tamaño no contenplado"];
