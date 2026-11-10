@@ -73,7 +73,7 @@ function inspeccionarPortada(array $archivos): array
         return ['archivo' => null, 'error' => 'Falta completar la validación de la portada.'];
     }
 
-    return ["archivo" => $a["tmp_name"], "error" => ""];
+    return ["archivo" => $a["tmp_name"], "error"=> null];
     
 
 }

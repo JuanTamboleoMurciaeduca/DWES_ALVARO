@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace App\Controlador;
 
 use App\Servicio\Biblioteca;
@@ -28,36 +30,34 @@ final class AltaControlador
                 $resultado = validarLibro($_POST);
                 $errores = $resultado['errores'];
                 $subida = inspeccionarPortada($_FILES);
-                if ($subida['error'] !== null) { $errores['portada'] = $subida['error']; }
+                if ($subida['error'] !== null) {
+                    $errores['portada'] = $subida['error'];
+                }
                 if ($errores === []) {
                     $datos = $resultado['datos'];
                     try {
                         // COMPLETAR 5. Construir $nuevo con los cinco datos validados.
                         $nuevo = new Libro($datos["titulo"], $datos["autor"], $datos["paginas"], $datos["genero"], $datos["fechaAlta"]);
-                        if($errores === [] ){
-                            $biblioteca->agregar($nuevo);
-                        }
                         // COMPLETAR 7. Guardar y asociar la portada si hay archivo.
-                        if($subida["archivo"] !== null){
+                        if ($subida["archivo"] !== null) {
                             $archivo = $subida["archivo"];
-                            $archivo->prepararDestino($archivo["extension"]);
+                            $destino =$archivo->prepararDestino($archivo["extension"]);
 
-                            $destino = $archivo["destino"];
-                            if(!move_uploaded_file($archivo["tmp_name"], $destino["ruta"])){
+                            // $destino = $archivo["destino"];
+                            if (!move_uploaded_file($archivo["tmp_name"], $destino["ruta"])) {
                                 $errores["portada"] = "Eror";
-                            
-                            }else{
+                            } else {
                                 $nuevo->cambiarPortada($destino["nombre"]);
                             }
-
                         }
 
-                        if($errores === []){
+                        if ($errores === []) {
                             $creado = $nuevo;
+                            $biblioteca->agregar($creado);
                         }
 
                         // Al terminar sin errores, agregar $nuevo y asignarlo a $creado.
-                
+
                     } catch (InvalidArgumentException) {
                         $errores['general'] = 'No se ha podido crear el libro con esos datos.';
                     } catch (RuntimeException $error) {
