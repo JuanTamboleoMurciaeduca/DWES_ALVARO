@@ -9,6 +9,11 @@ use function App\Soporte\e;
 <head>
     <meta charset="UTF-8">
     <title>Catálogo de videojuegos</title>
+    <style>
+        table, th, td{
+            border: solid;
+        }
+    </style>
 </head>
 
 <body>
@@ -25,6 +30,20 @@ use function App\Soporte\e;
     <?php endif; ?>
 
     <!-- COMPLETAR 1. Formulario GET con controles HTML estáticos. -->
+    <form action="index.php" method="get">
+        <label for="q">Titulo o estudio</label>
+        <input type="text" name="q" id="q">
+    
+        <label for="genero">Genero</label>
+        <select id="genero" name="genero">
+            <option value="">Todos</option>
+            <option value="aventura">Aventura</option>
+            <option value="estrategia">Estrategia</option>
+            <option value="rol">Rol</option>
+        </select>
+
+        <button type="submit">Buscar</button>
+    </form>
 
     <?php if ($errores === []): ?>
         <!-- Listado proporcionado. -->

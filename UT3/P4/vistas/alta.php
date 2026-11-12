@@ -25,7 +25,32 @@ use function App\Soporte\e;
         <?php endif; ?>
 
         <!-- COMPLETAR 2. Formulario POST multipart con controles HTML estáticos. -->
+        <form action="alta.php" method="POST" enctype="multipart/form-data">
+            <label for="titulo">Título:</label>
+            <input type="text" id="titulo" name="titulo" maxlength="120" required>
 
+            <label for="estudio">Estudio:</label>
+            <input type="text" id="estudio" name="estudio" maxlength="100" required>
+
+            <label for="horas">Horas:</label>
+            <input type="text" id="horas" name="horas">
+
+            <label for="genero">Género:</label>
+            <select id="genero" name="genero">
+                <option value="">Elige un género</option>
+                <option value="aventura">Aventura</option>
+                <option value="estrategia">Estrategia</option>
+                <option value="rol">Rol</option>
+            </select>
+
+            <label for="fechaLanzamiento">Fecha de lanzamiento (YYYY-MM-DD):</label>
+            <input type="text" id="fechaLanzamiento" name="fechaLanzamiento" placeholder="YYYY-MM-DD">
+
+            <label for="caratula">Carátula:</label>
+            <input type="file" id="caratula" name="caratula" accept="image/jpeg,image/png,image/webp">
+
+            <button type="submit">Guardar videojuego</button>
+        </form>
     <?php else: ?>
         <!-- Confirmación proporcionada. Solo aparece cuando asignas $creado. -->
         <h2>Videojuego creado</h2>
