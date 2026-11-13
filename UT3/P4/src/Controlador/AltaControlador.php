@@ -44,8 +44,26 @@ final class AltaControlador
 
                     try {
                         // COMPLETAR 3. Construir $nuevo con los cinco datos validados.
+                        $nuevo = new Videojuego($datos["titulo"], $datos["estudio"], $datos["horas"], $datos["genero"], $datos["fechaLanzamiento"]);
                         // COMPLETAR 5. Guardar y asociar la carátula si hay archivo.
+                        if($subida["archivo"] !== null){
+                            $archivo = $subida["archivo"];
+                            $destino = prepararDestino($archivo["extension"]);
+                            
+                            if(!move_uploaded_file($archivo["tmp_name"], $destino["ruta"])){
+                                $errores["caratula"] = "error";
+                            }else{
+                                $nuevo->cambiarCaratula($destino["nombre"]);
+                            }
+                        }
+
+
                         // Al terminar sin errores, agregar $nuevo y asignarlo a $creado.
+                        if($errores === []){
+                            $catalogo->agregar($nuevo);
+                            $creado = $nuevo;
+                            
+                        }
 
                     } catch (InvalidArgumentException) {
                         $errores['general'] = 'No se ha podido crear el videojuego con esos datos.';

@@ -38,7 +38,7 @@ use function App\Soporte\e;
             <tr>
                 <th style="border: solid;">Nombre</th>
                 <th style="border: solid;">Fabricante</th>
-                <th style="border: solid;">Unidades</th>
+                <th style="borderau: solid;">Unidades</th>
                 <th style="border: solid;">Categoria</th>
                 <th style="border: solid;">Fecha de alta</th>
             </tr>
