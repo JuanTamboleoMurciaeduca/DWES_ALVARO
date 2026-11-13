@@ -9,9 +9,33 @@ use PHPUnit\Framework\TestCase;
 
 final class ConsultaVideojuegoTest extends TestCase
 {
-    // COMPLETAR 11. Videojuego ausente con un stub.
+    public function testVideojuegoAusenteConStub(): void
+    {
+        $repositorio = new class implements VideojuegoRepository {
+            public function buscarPorId(int $id): ?Videojuego
+            {
+                return null;
+            }
+        };
 
+        $consulta = new ConsultaVideojuego($repositorio);
 
-    // COMPLETAR 12. Consulta única del identificador con un mock.
+        $this->expectException(OutOfBoundsException::class);
+        $consulta->obtener(99);
+    }
 
+    public function testConsultaUnicaDelIdentificadorConMock(): void
+    {
+        $videojuego = new Videojuego('Islas de cristal', 'Nébula Studio', 35, 'aventura');
+
+        $repositorio = $this->createMock(VideojuegoRepository::class);
+        $repositorio->expects($this->once())
+            ->method('buscarPorId')
+            ->with(7)
+            ->willReturn($videojuego);
+
+        $consulta = new ConsultaVideojuego($repositorio);
+
+        $this->assertSame($videojuego, $consulta->obtener(7));
+    }
 }

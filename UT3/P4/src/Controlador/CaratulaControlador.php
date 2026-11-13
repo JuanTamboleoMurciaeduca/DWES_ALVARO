@@ -38,6 +38,20 @@ final class CaratulaControlador
             exit;
         }
         // COMPLETAR 7. Cabeceras y envío del archivo validado.
+        $mime = is_file($ruta) ? (new finfo(FILEINFO_MIME_TYPE))->file($ruta) : false;
+        
+        if (!in_array($mime, [
+            'image/jpeg',
+            'image/png',
+            'image/webp'
+        ], true)) {
+            http_response_code(404);
+            exit;
+        }
+        
+        header('Content-Type: ' . $mime);
+        header('X-Content-Type-Options: nosniff');
+        readfile($ruta);
 
         exit;
     }
